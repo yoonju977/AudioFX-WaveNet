@@ -4,69 +4,45 @@
 
 This project aims to emulate guitar effects using deep learning, leveraging the WaveNet model to process audio data and generate guitar effects in real time. By training a neural network to learn the transformations applied by various guitar effects, this project seeks to recreate the nuanced sound modifications applied by traditional guitar pedals and audio processors.
 
-## **Methodology and Key Technologies**
+# **Methodology and Key Technologies**
 
-**Model: WaveNet**
-- WaveNet Architecture: WaveNet uses dilated causal convolutions, allowing the model to capture long-range dependencies within the audio waveform. This architecture is particularly well-suited for emulating audio effects as it enables the model to learn intricate audio patterns that mimic how guitar effects process sound.
+# TCN-Based Real-Time Guitar Effect Emulation
 
-- Input and Output: The model is trained by providing clean guitar sound data as input, while the output is the sound with the guitar effect applied. Through this structure, the model learns to approximate the transformation from clean to effected sound.
+This repository contains the implementation and supplementary materials for a Temporal Convolutional Network (TCN)-based model designed to emulate guitar effects in near-real-time. By receiving a clean guitar input signal, the model generates output signals that closely approximate audio produced by professional hardware effect units. This approach integrates advanced preprocessing techniques and a parameter-efficient network architecture, enabling sub-millisecond inference rates and high-fidelity output quality.
 
-- Audio Pattern Learning: By utilizing dilated convolutions, WaveNet can learn a wide range of audio patterns at different temporal resolutions, which is critical in capturing the subtleties of various audio effects.
+## Key Contributions
 
-**Frameworks**
+- **Near-Real-Time Inference**:  
+  Achieves average inference times in the range of 1–3 ms, thereby facilitating live performance and recording scenarios with minimal latency.
 
-- PyTorch: PyTorch is used to design, train, and experiment with the WaveNet model. Its flexibility and dynamic computation graph make it ideal for this research, allowing rapid prototyping and testing of the model architecture.
+- **Efficient TCN Architecture**:  
+  Employs a TCN optimized for time-series audio analysis. Compared to conventional frameworks such as WaveNet, the TCN model is more parameter-efficient and amenable to parallelization, thereby reducing computational overhead and improving inference speed without compromising audio quality.
 
-- TensorFlow: TensorFlow is used for handling large-scale models and deployment needs. Once trained in PyTorch, the model can be ported to TensorFlow for broader deployment and integration with JUCE for real-time applications.
+- **Enhanced Data Preprocessing**:  
+  Incorporates RMS normalization, cross-correlation-based synchronization, STFT-based spectral transformation, and overlapped segmentation. These steps collectively ensure stable input-output alignment and improved frequency-domain representation, contributing to superior signal-to-noise ratio (SNR) and more accurate replication of the target effects.
 
-**Additional Components**
+- **Multi-Modal Loss Integration**:  
+  Utilizes a combination of MSE, STFT, and perceptual (Mel-spectrogram) loss functions to account for both time- and frequency-domain characteristics. This strategy ensures that the model does not merely minimize numerical error but also enhances perceptual sound quality.
 
-- JUCE Integration: An important goal of this project is to integrate the trained WaveNet model with the JUCE framework. JUCE provides powerful tools for creating real-time audio applications, allowing for the real-time monitoring of guitar effect emulation and enabling real-time interaction with the model as an effect processor.
+- **Comprehensive Performance Evaluation**:  
+  Evaluates the model using SNR, BFRE (Batch-Level Frequency Response Error), BTAS (Batch-Level Temporal Alignment Score), and PATS (Perceptual A/B Test Score). The proposed solution improves SNR from -3.58 dB in initial configurations to approximately +2.10 dB. In perceptual testing, the model achieves an ~82% preference rating relative to authentic hardware-processed audio signals.
 
-## **Usage**
+## Repository Structure
 
-**Prerequisites**
+- `dataset/`: Placeholder directory for dataset handling scripts and instructions (no raw datasets included).
+- `docs/`: Additional documentation, figures, and references detailing architectural design and experimental setups.
+- `README.md`: Contains an overview of the project, including high-level methodology, performance indicators, and references.
 
-- Python 3.8 or later
-- PyTorch and TensorFlow (installation instructions provided below)
-- JUCE Framework (for real-time audio processing, optional for testing)
+## Requirements and Setup
 
-**Installation**
+**Prerequisites**:
+- Python 3.8+
+- PyTorch >= 1.7
+- torchaudio, numpy, scipy, librosa
+- A GPU is recommended for both training and real-time inference.
 
-To set up the environment:
-```
-# Clone the repository
-git clone https://github.com/yourusername/wavenet-guitar-effects
-cd wavenet-guitar-effects
-
-# Install dependencies
+**Installation**:
+```bash
+git clone https://github.com/YourUsername/TCN-Guitar-Effect-Emulation.git
+cd TCN-Guitar-Effect-Emulation
 pip install -r requirements.txt
-```
-
-**Training the Model**
-
-The model can be trained using your dataset of clean and effect-applied guitar audio files:
-```
-python train.py --data_path /path/to/your/data
-```
-
-**Evaluating and Testing**
-
-After training, you can evaluate the model with test audio files to measure performance metrics like loss and SNR (Signal-to-Noise Ratio):
-
-```
-python evaluate.py --model_path /path/to/model.pth --test_data /path/to/test/data
-```
-
-**JUCE Integration**
-
-Integrating with JUCE allows real-time monitoring and deployment of the trained model for real-time guitar processing. This integration can be set up with instructions from the JUCE documentation.
-
-## **Future Goals**
-- Extended Effects Range: Training additional models to cover a broader range of guitar effects (e.g., distortion, reverb, delay).
-- Real-Time Optimization: Further optimizing the model for reduced latency in real-time applications.
-- Platform Deployment: Packaging the emulated effects as standalone plugins or applications for musicians.
-
-## **Acknowledgements**
-
-This project utilizes PyTorch and TensorFlow for model development, and the JUCE framework for real-time audio applications. Special thanks to [Original Paper or Research Group] for their contributions to WaveNet research.
